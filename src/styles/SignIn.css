@@ -1,0 +1,133 @@
+.auth-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #e0eaf0;
+}
+
+.signin-page {
+    background-color: #B0C8D0;
+    /* override for sign‑in screen background */
+}
+
+.auth-card {
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    background-color: #e0eaf0;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.stripe {
+    width: 100%;
+    height: 56px;
+    background-color: #0052cc;
+}
+
+.content-wrapper {
+    padding: 24px 32px;
+    text-align: center;
+}
+
+.auth-title {
+    margin: 0 0 12px;
+    font-size: 2rem;
+    color: #0052cc;
+}
+
+.auth-subtitle {
+    margin: 0 0 24px;
+    font-size: 1rem;
+    color: #333;
+}
+
+.signin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.signin-form .input-group input {
+    width: 100%;
+    padding: 16px 20px;
+    border: none;
+    border-radius: 24px;
+    background-color: #fff;
+    font-size: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.forgot-password {
+    text-align: right;
+    margin-top: -8px;
+}
+
+.forgot-password a {
+    color: #0052CC;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.forgot-password a:hover {
+    text-decoration: underline;
+}
+
+.error-message {
+    color: #C00;
+    font-size: 0.9rem;
+    text-align: center;
+    margin: 0;
+}
+
+.signin-button {
+    width: 100%;
+    padding: 14px 0;
+    background-color: #0052CC;
+    color: #fff;
+    border: none;
+    border-radius: 24px;
+    font-size: 1rem;
+    text-transform: lowercase;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+}
+
+.signin-button:hover {
+    opacity: 0.9;
+}
+
+.signin-button:active {
+    transform: scale(0.98);
+}
+
+.signup-footer {
+    margin-top: 24px;
+    font-size: 0.9rem;
+    color: #333;
+    text-align: center;
+}
+
+.signup-footer a {
+    color: #0052CC;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.signup-footer a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .auth-card {
+        width: 100%;
+        height: 100vh;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    .content-wrapper {
+        padding: 16px 24px;
+    }
+}

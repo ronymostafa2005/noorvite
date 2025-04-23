@@ -1,0 +1,79 @@
+.notifications-page {
+    box-sizing: border-box;
+    padding: 24px 16px;
+    background-color: #B0C8D0;
+    min-height: 100vh;
+}
+
+
+/* Back arrow */
+
+.back-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+    cursor: pointer;
+    color: #0052CC;
+}
+
+
+/* Title */
+
+.notifications-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #0052CC;
+    margin: 0 0 24px;
+}
+
+
+/* List of notifications */
+
+.notifications-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.notification-item {
+    background-color: #FFF;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.notification-text {
+    font-size: 1rem;
+    color: #000;
+    margin-bottom: 12px;
+}
+
+
+/* For invite notification only */
+
+.invite-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.invite-actions .accept,
+.invite-actions .reject {
+    flex: 1;
+    padding: 8px 0;
+    border: none;
+    border-radius: 24px;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.invite-actions .accept {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.invite-actions .reject {
+    background-color: #dc3545;
+    color: #fff;
+}
