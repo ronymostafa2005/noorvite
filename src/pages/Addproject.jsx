@@ -16,26 +16,23 @@ import {
   Alert
 } from '@mui/material';
 import { Add, CloudUpload } from '@mui/icons-material';
+import axios from 'axios';
 
 const Addproject = () => {
   const [formData, setFormData] = useState({
-    projectName: '',
-    projectAuthority: '',
-    projectDescription: '',
-    dueDate: '',
+    title: '',
+    priority: 'medium',
+    description: '',
+    deadline: '',
+    category_name: '',
     uploadedFile: null
   });
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
-
-  const teamMembers = [
-    { name: 'Jerry', avatar: 'https://randomuser.me/api/portraits/men/1.jpg' },
-    { name: 'Mehrin', avatar: 'https://randomuser.me/api/portraits/women/2.jpg' },
-    { name: 'Avishek', avatar: 'https://randomuser.me/api/portraits/men/3.jpg' },
-    { name: 'Jafar', avatar: 'https://randomuser.me/api/portraits/men/4.jpg' }
-  ];
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -55,29 +52,35 @@ const Addproject = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
-    const newProject = {
-      title: formData.projectName,
-      category: formData.projectDescription,
-      progress: 0,
-      priority: formData.projectAuthority === 'High' ? 9 : 
-               formData.projectAuthority === 'Medium' ? 5 : 3,
-      users: teamMembers.map(member => member.avatar),
-      dueDate: formData.dueDate,
-      status: 'Active'
-    };
+    try {
+      const response = await axios.post('/api/projects/', {
+        title: formData.title,
+        category_name: formData.category_name,
+        priority: formData.priority,
+        deadline: formData.deadline,
+        description: formData.description
+      }, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
 
-    const existingProjects = JSON.parse(localStorage.getItem('projects') || '[]');
-    const updatedProjects = [...existingProjects, newProject];
-    localStorage.setItem('projects', JSON.stringify(updatedProjects));
-    
-    setSnackbarOpen(true);
-    
-    setTimeout(() => {
-      navigate('/Projects');
-    }, 1500);
+      setSnackbarMessage('Project created successfully!');
+      setSnackbarSeverity('success');
+      setSnackbarOpen(true);
+      
+      setTimeout(() => {
+        navigate('/Projects');
+      }, 1500);
+    } catch (error) {
+      console.error('Failed to create project:', error);
+      setSnackbarMessage(error.response?.data?.message || 'Failed to create project');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+    }
   };
 
   const handleCloseSnackbar = () => {
@@ -104,7 +107,7 @@ const Addproject = () => {
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
         }}
       >
-        {/* بقية الكود كما هو */}
+        
         <Typography variant="h4" sx={{ mb: 3, textAlign: 'center', color: '#004AAD' }}>
           Add Project
         </Typography>
@@ -116,10 +119,26 @@ const Addproject = () => {
           </Typography>
           <TextField
             fullWidth
-            name="projectName"
-            value={formData.projectName}
+            name="title"
+            value={formData.title}
             onChange={handleChange}
             placeholder="Enter project name"
+            size="small"
+            required
+          />
+        </Box>
+
+        {/* Category Name */}
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
+            Category
+          </Typography>
+          <TextField
+            fullWidth
+            name="category_name"
+            value={formData.category_name}
+            onChange={handleChange}
+            placeholder="Enter category name"
             size="small"
             required
           />
@@ -131,17 +150,17 @@ const Addproject = () => {
             Project Priority
           </Typography>
           <RadioGroup
-            name="projectAuthority"
-            value={formData.projectAuthority}
+            name="priority"
+            value={formData.priority}
             onChange={handleChange}
             row
           >
-            {['High', 'Medium', 'Low'].map((option) => (
+            {['high', 'medium', 'low'].map((option) => (
               <FormControlLabel
                 key={option}
                 value={option}
                 control={<Radio color="primary" size="small" />}
-                label={option}
+                label={option.charAt(0).toUpperCase() + option.slice(1)}
                 sx={{ mr: 2 }}
               />
             ))}
@@ -193,40 +212,12 @@ const Addproject = () => {
             fullWidth
             multiline
             rows={4}
-            name="projectDescription"
-            value={formData.projectDescription}
+            name="description"
+            value={formData.description}
             onChange={handleChange}
             size="small"
             placeholder="Describe your project..."
           />
-        </Box>
-
-        {/* Team Members */}
-        <Box sx={{ mb: 3 }}>
-          <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
-            Team Members
-          </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <AvatarGroup max={4} sx={{ '& .MuiAvatar-root': { width: 32, height: 32 } }}>
-              {teamMembers.map((member, index) => (
-                <Tooltip key={index} title={member.name}>
-                  <Avatar alt={member.name} src={member.avatar} />
-                </Tooltip>
-              ))}
-            </AvatarGroup>
-            <Tooltip title="Add team member">
-              <IconButton
-                size="small"
-                sx={{
-                  border: '1px solid #ddd',
-                  borderRadius: '50%',
-                  '&:hover': { backgroundColor: '#f0f0f0' }
-                }}
-              >
-                <Add fontSize="small" />
-              </IconButton>
-            </Tooltip>
-          </Box>
         </Box>
 
         {/* Due Date */}
@@ -237,12 +228,13 @@ const Addproject = () => {
           <TextField
             fullWidth
             type="date"
-            name="dueDate"
-            value={formData.dueDate}
+            name="deadline"
+            value={formData.deadline}
             onChange={handleChange}
             size="small"
             InputLabelProps={{ shrink: true }}
             inputProps={{ min: new Date().toISOString().split('T')[0] }}
+            required
           />
         </Box>
 
@@ -269,8 +261,8 @@ const Addproject = () => {
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
-        <Alert onClose={handleCloseSnackbar} severity="success">
-          Project saved successfully!
+        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
+          {snackbarMessage}
         </Alert>
       </Snackbar>
     </Box>
